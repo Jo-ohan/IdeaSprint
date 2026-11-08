@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { DOMAIN_KEYS, type DomainKey } from '../config'
 import { DOMAINS, generateSpark, type Spark } from '../ideas'
+import { useInView } from '../hooks'
 
 type Choice = DomainKey | 'any'
 
@@ -13,13 +14,25 @@ export default function IdeaSpark({ onUse }: Props) {
   const [spark, setSpark] = useState<Spark | null>(null)
   const [count, setCount] = useState(0)
   const [copied, setCopied] = useState<'idle' | 'done' | 'failed'>('idle')
+  const [generating, setGenerating] = useState(false)
   const timer = useRef<number | undefined>(undefined)
+  const genTimer = useRef<number | undefined>(undefined)
+
+  const [headRef, headInView] = useInView<HTMLDivElement>({ threshold: 0.15 })
+  const [sideRef, sideInView] = useInView<HTMLDivElement>({ threshold: 0.1 })
+  const [outRef, outInView] = useInView<HTMLDivElement>({ threshold: 0.05 })
 
   const run = (c: Choice = choice) => {
     const domain: DomainKey = c === 'any' ? DOMAIN_KEYS[Math.floor(Math.random() * DOMAIN_KEYS.length)] : c
-    setSpark((prev) => generateSpark(domain, prev))
-    setCount((n) => n + 1)
+    setGenerating(true)
     setCopied('idle')
+    // Brief generating state for feedback — 180ms, then reveal
+    window.clearTimeout(genTimer.current)
+    genTimer.current = window.setTimeout(() => {
+      setSpark((prev) => generateSpark(domain, prev))
+      setCount((n) => n + 1)
+      setGenerating(false)
+    }, 180)
   }
 
   const copy = async () => {
@@ -37,8 +50,18 @@ export default function IdeaSpark({ onUse }: Props) {
   return (
     <section id="spark" className="section section--blue" aria-labelledby="spark-title">
       <div className="wrap spark">
-        <div className="spark__side">
-          <h2 id="spark-title" className="h2">Idea Spark</h2>
+        <div
+          ref={sideRef}
+          className={`spark__side reveal-block${sideInView ? ' revealed' : ''}`}
+        >
+          <div ref={headRef}>
+            <h2
+              id="spark-title"
+              className={`h2 reveal-block${headInView ? ' revealed' : ''}`}
+            >
+              Idea Spark
+            </h2>
+          </div>
           <p className="section__intro">
             Stuck for a starting point? Pick a domain and get a problem to think about. These are creative prompts for practice, not official Idea Sprint challenges.
           </p>
@@ -62,26 +85,76 @@ export default function IdeaSpark({ onUse }: Props) {
             ))}
           </fieldset>
 
-          <button type="button" className="btn btn--light" onClick={() => run()}>
-            {spark ? 'Spark another idea' : 'Generate a problem'}
-          </button>
+          <div className="spark__action-row">
+            <button
+              type="button"
+              className={`btn btn--light spark-btn${generating ? ' spark-btn--generating' : ''}`}
+              onClick={() => run()}
+              disabled={generating}
+            >
+              {generating ? 'Generating…' : spark ? 'Spark another idea' : 'Generate a problem'}
+            </button>
+            <div className="spark__doodle" aria-hidden="true">
+              <svg className="spark__doodle-arrow" width="40" height="28" viewBox="0 0 40 28" fill="none">
+                <path
+                  d="M4,18 C14,6 24,8 32,16"
+                  stroke="#fff"
+                  strokeWidth="2"
+                  strokeDasharray="3 3"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M24,16 L32,16 L30,8"
+                  stroke="#fff"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <span className="spark__doodle-text">instant creative prompt</span>
+            </div>
+          </div>
         </div>
 
-        <div className="spark__out">
-          <div className="prompt" aria-live="polite" aria-atomic="true">
-            {spark ? (
+        <div
+          ref={outRef}
+          className={`spark__out reveal-block${outInView ? ' revealed' : ''}`}
+          style={{ '--reveal-delay': '120ms' } as React.CSSProperties}
+        >
+          <div
+            className={`prompt${generating ? ' prompt--generating' : ''}`}
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            {spark && !generating ? (
               <>
-                <p className="prompt__meta">{DOMAINS[spark.domain].label} prompt</p>
+                <div className="prompt__meta-wrap">
+                  <p className="prompt__meta">{DOMAINS[spark.domain].label} prompt</p>
+                  <span className="prompt__badge-spark" key={count} aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                      <path
+                        d="M12,2 C12,2 14,7 19,9 C14,11 12,16 12,16 C12,16 10,11 5,9 C10,7 12,2 12,2 Z"
+                        fill="var(--amber)"
+                      />
+                      <circle cx="18" cy="4" r="1.5" fill="#fff" />
+                      <circle cx="5" cy="15" r="1.2" fill="#fff" />
+                    </svg>
+                  </span>
+                </div>
                 <p key={count} className="prompt__text">{spark.text}</p>
               </>
+            ) : generating ? (
+              <p className="prompt__empty prompt__empty--generating" aria-hidden="true">
+                <span className="gen-dots"><span /><span /><span /></span>
+              </p>
             ) : (
               <p className="prompt__empty">Your problem statement appears here. Choose a domain and press generate.</p>
             )}
           </div>
-          {spark && (
+          {spark && !generating && (
             <div className="prompt__actions">
               <button type="button" className="btn btn--outline-light" onClick={copy}>
-                {copied === 'done' ? 'Copied' : copied === 'failed' ? 'Copy failed, select the text instead' : 'Copy prompt'}
+                {copied === 'done' ? 'Copied ✓' : copied === 'failed' ? 'Copy failed — select the text instead' : 'Copy prompt'}
               </button>
               <a className="btn btn--outline-light" href="#register" onClick={() => onUse(spark.domain)}>
                 Register with this domain
