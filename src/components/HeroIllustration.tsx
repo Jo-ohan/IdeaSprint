@@ -249,7 +249,7 @@ function LaunchIllustration() {
   )
 }
 
-/* ── 04. PITCH (Tilted "Pitch Ready" Stamp) ── */
+/* ── 04. PITCH ── */
 function PitchIllustration() {
   return (
     <svg
@@ -318,7 +318,7 @@ function PitchIllustration() {
             letterSpacing="0.04em"
             fill="var(--ink)"
           >
-            PITCH READY
+            PITCH
           </text>
         </g>
       </g>
