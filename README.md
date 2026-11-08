@@ -1,2 +1,0 @@
-# IdeaSprint
-IEDC Web Task
