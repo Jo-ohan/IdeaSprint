@@ -95,18 +95,18 @@ export default function IdeaSpark({ onUse }: Props) {
               {generating ? 'Generating…' : spark ? 'Spark another idea' : 'Generate a problem'}
             </button>
             <div className="spark__doodle" aria-hidden="true">
-              <svg className="hero__doodle-arrow" width="56" height="32" viewBox="0 0 56 32" fill="none">
+              <svg className="spark__doodle-arrow" width="40" height="28" viewBox="0 0 40 28" fill="none">
                 <path
-                  d="M6,8 C18,24 34,26 48,14"
-                  stroke="var(--blue)"
-                  strokeWidth="2.2"
-                  strokeDasharray="4 3"
+                  d="M4,18 C14,6 24,8 32,16"
+                  stroke="#fff"
+                  strokeWidth="2"
+                  strokeDasharray="3 3"
                   strokeLinecap="round"
                 />
                 <path
-                  d="M40,14 L48,14 L46,22"
-                  stroke="var(--blue)"
-                  strokeWidth="2.2"
+                  d="M24,16 L32,16 L30,8"
+                  stroke="#fff"
+                  strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
