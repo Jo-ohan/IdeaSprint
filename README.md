@@ -1,32 +1,66 @@
 # IEDC Idea Sprint 2026
 
-Single-page microsite for **IEDC Idea Sprint 2026**, a 24-hour student ideathon hosted by IEDC BOOTCAMP CEC (College of Engineering Chengannur). Built for the IEDC Web Manager selection task.
+A responsive, single-page microsite for **IEDC Idea Sprint 2026**, a 24-hour student ideathon hosted by IEDC BOOTCAMP CEC (College of Engineering Chengannur). Developed as part of the IEDC Web Manager selection task.
 
-## Stack
-React 19, Vite, TypeScript, one hand-written CSS file. Fonts via Fontsource (Archivo variable, IBM Plex Sans), self-hosted. No backend, no UI library, no animation library.
+**Live Website:** https://ideasprint-dusky.vercel.app/
 
-## Run locally
+## Tech Stack
+
+- **React 19** – Component-based frontend.
+- **TypeScript** – Type safety.
+- **Vite** – Development server and production build.
+- **CSS** – Custom styling, responsive layouts and animations.
+- **Fontsource** – Self-hosted Archivo and IBM Plex Sans fonts.
+
+No backend, UI component library or animation library is required.
+
+## Run Locally
+
 ```bash
+# Install dependencies
 npm install
-npm run dev        # http://localhost:5173
-npm run build      # type-check + production build into dist/
-npm run preview    # serve the production build
+
+# Start development server
+npm run dev
+
+# Create production build
+npm run build
+
+# Preview production build
+npm run preview
 ```
 
-## Confirm event details (one file)
-Edit `src/config.ts`. Every `null` value is shown on the page as "to be confirmed".
+The development server runs at `http://localhost:5173`.
 
-| Field | Effect |
+## Event Configuration
+
+Event details can be updated in `src/config.ts`.
+
+| Field | Purpose |
 | --- | --- |
-| `startsAt` | ISO string with offset, e.g. `2026-12-05T09:00:00+05:30`. Enables the real countdown, then "live", then "ended" states. |
-| `venue` | Shown in the hero. |
-| `registrationUrl` | Shown as a real link after the demo form. |
-| `contact`, `socials` | Footer links. Only real URLs become links. |
-| `schedule` | Replace draft sessions/times, then set `confirmed: true` to remove the draft notice. |
+| `startsAt` | Event start date and time, including timezone offset. |
+| `venue` | Event venue displayed in the hero section. |
+| `registrationUrl` | Registration-related link configuration. |
+| `contact` | Contact information. |
+| `socials` | Instagram and LinkedIn links. |
+| `schedule` | Day 1 and Day 2 event schedule. |
+
+The countdown uses the configured event start time and transitions between upcoming, live and ended states.
 
 ## Features
-- Hero with live countdown (or "date to be announced"), CTA, and 24 hour-bars that fill as the sprint runs.
-- Day 1 / Day 2 timeline rail.
-- Idea Spark generator: offline, no API, pick a domain and get a problem statement.
-- Registration form with inline validation. **Frontend demo only: nothing is sent or stored.**
-- Footer with contact and social placeholders.
+
+- **Hero section:** Event introduction, countdown, event details and 24 individual visual timeline segments.
+- **Announcement marquee:** Continuously scrolling event highlights.
+- **Event schedule:** Day 1 and Day 2 timeline.
+- **Idea Spark:** Interactive, offline idea generator that produces problem statements based on the selected domain. No external API required.
+- **Registration form:** Responsive form with validation, team registration options and conditional team-member fields. Frontend demonstration only; submissions are not stored or sent to a backend.
+- **Responsive design:** Layouts adapted for desktop, tablet and mobile screens.
+- **Animations:** Scroll-based reveals, interactive button states and subtle hover effects.
+- **Footer:** IEDC branding, institutional logos and Instagram and LinkedIn links.
+
+## Deployment
+
+The project is hosted on Vercel and its source code is maintained on GitHub.
+
+- **Live:** https://ideasprint-dusky.vercel.app/
+- **Repository:** https://github.com/Jo-ohan/IdeaSprint
