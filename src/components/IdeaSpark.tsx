@@ -88,7 +88,7 @@ export default function IdeaSpark({ onUse }: Props) {
           <div className="spark__action-row">
             <button
               type="button"
-              className={`btn btn--light spark-btn${generating ? ' spark-btn--generating' : ''}`}
+              className={`btn btn--primary spark-btn${generating ? ' spark-btn--generating' : ''}`}
               onClick={() => run()}
               disabled={generating}
             >
