@@ -49,7 +49,7 @@ export function useInView<T extends Element>(
 
     observer.observe(el)
     return () => observer.disconnect()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return [ref, inView]
@@ -74,35 +74,55 @@ export function useScrollProgress(): number {
   return progress
 }
 
+
 /**
- * Returns the id of the section whose top is closest to the viewport top.
- * Updates only on scroll and on initial mount.
+ * Tracks the section currently occupying the viewport's activation line.
+ * Updates during smooth scrolling, normal scrolling and window resizing.
  */
 export function useActiveSection(ids: string[]): string {
   const [active, setActive] = useState(ids[0] ?? '')
+
   useEffect(() => {
     if (ids.length === 0) return
+
+    let animationFrame = 0
+
     const update = () => {
-      const offset = 80 // header height + a little breathing room
-      let best = ids[0]
-      let bestDist = Infinity
-      for (const id of ids) {
-        const el = document.getElementById(id)
-        if (!el) continue
-        const top = el.getBoundingClientRect().top - offset
-        // Prefer sections that have scrolled past the offset line
-        const dist = Math.abs(top)
-        if (top <= 0 && dist < bestDist) {
-          bestDist = dist
-          best = id
+      cancelAnimationFrame(animationFrame)
+
+      animationFrame = requestAnimationFrame(() => {
+        const header = document.querySelector('.site-header')
+        const headerHeight = header?.getBoundingClientRect().height ?? 80
+        const activationLine = Math.max(headerHeight + 28, 100)
+
+        let current = ids[0]
+
+        for (const id of ids) {
+          const element = document.getElementById(id)
+          if (!element) continue
+
+          if (element.getBoundingClientRect().top <= activationLine) {
+            current = id
+          } else {
+            break
+          }
         }
-      }
-      setActive(best)
+
+        setActive(current)
+      })
     }
+
     update()
     window.addEventListener('scroll', update, { passive: true })
-    return () => window.removeEventListener('scroll', update)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    window.addEventListener('resize', update)
+
+    return () => {
+      cancelAnimationFrame(animationFrame)
+      window.removeEventListener('scroll', update)
+      window.removeEventListener('resize', update)
+    }
   }, [ids.join(',')])
+
   return active
 }
+
