@@ -9,7 +9,7 @@ const ITEMS: TickerItem[] = [
   { text: 'PROTOTYPE', symbol: '✦' },
   { text: 'PITCH', symbol: '◆' },
   { text: 'NOVEMBER 21, 2026', symbol: '✦' },
-  { text: 'SPDK ROOM CEC', symbol: '◆' },
+  { text: 'MAKER\'S SPACE', symbol: '◆' },
   { text: 'EXPERIMENT · VALIDATE · BUILD · REPEAT', symbol: '✦' },
   { text: 'COLLEGE OF ENGINEERING CHENGANNUR', symbol: '◆' },
 ]
@@ -42,7 +42,7 @@ export default function Marquee() {
       </div>
       {/* Screen-reader accessible alternative */}
       <span className="sr-only">
-        IEDC Idea Sprint 2026: 24 Hours. One Idea. Build something real. Ideate, Prototype, Pitch. Saturday, November 21, 2026 at SPDK Room, College of Engineering Chengannur.
+        IEDC Idea Sprint 2026: 24 Hours. One Idea. Build something real. Ideate, Prototype, Pitch. Saturday, November 21, 2026 at Maker's Space, College of Engineering Chengannur.
       </span>
     </div>
   )

@@ -63,7 +63,7 @@ export const siteConfig = {
         label: 'Day 1',
         date: 'Saturday, 21 November 2026',
         items: [
-          { time: '09:00 AM', title: 'Check-in & the 24-hour clock starts', detail: 'Teams arrive at the SPDK Room, collect badges, and the build begins.' },
+          { time: '09:00 AM', title: 'Check-in & the 24-hour clock starts', detail: 'Teams arrive at the Maker\'s Space, collect badges, and the build begins.' },
           { time: '10:00 AM', title: 'Opening session & rules briefing', detail: 'Welcome address, ideathon rules, judging criteria and deliverables.' },
           { time: '11:00 AM', title: 'Theme & problem domain briefing', detail: 'Challenge tracks and problem statements introduced to all participants.' },
           { time: '04:00 PM', title: 'Mentor review round 1', detail: 'Domain mentors circulate to review direction, technical viability and scope.' },

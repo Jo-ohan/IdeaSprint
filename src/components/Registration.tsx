@@ -157,10 +157,10 @@ export default function Registration({ presetDomain }: Props) {
         <div className="wrap form-wrap">
           <div className="success success--animate" role="status">
             <h2 id="register-title" className="h2" ref={doneRef} tabIndex={-1}>
-              Demo complete. Nothing was sent.
+              Registration complete.
             </h2>
             <p>
-              Your details passed validation in this browser only. They were not sent to IEDC BOOTCAMP CEC, and they were not saved anywhere. This form is a frontend demo, so you are not registered yet.
+              Your details passed validation in this browser only. This form is a frontend demo, so you are not registered yet.
             </p>
             <dl className="summary">
               <div><dt>Name</dt><dd>{values.name}</dd></div>
@@ -222,7 +222,7 @@ export default function Registration({ presetDomain }: Props) {
         >
           <h2 id="register-title" className="h2">Register your interest</h2>
           <p className="section__intro">
-            Fields marked with * are required. This frontend demo validates your answers locally — submissions are not collected or stored.
+            This frontend demo validates your answers locally — submissions are not collected or stored.
           </p>
         </div>
 
@@ -243,7 +243,7 @@ export default function Registration({ presetDomain }: Props) {
             <form ref={formRef} onSubmit={onSubmit} noValidate className="form">
               {/* Name: Full-width text input */}
               <div className="field">
-                <label htmlFor="name">NAME *</label>
+                <label htmlFor="name">NAME</label>
                 <input
                   id="name"
                   type="text"
@@ -258,7 +258,7 @@ export default function Registration({ presetDomain }: Props) {
 
               {/* Gender: Full-width dropdown */}
               <div className="field">
-                <label htmlFor="gender">GENDER *</label>
+                <label htmlFor="gender">GENDER</label>
                 <select
                   id="gender"
                   value={values.gender}
@@ -277,7 +277,7 @@ export default function Registration({ presetDomain }: Props) {
               {/* Phone Number and Email: Side-by-side inputs on desktop, stacked on mobile */}
               <div className="form__row form__row--2col">
                 <div className="field">
-                  <label htmlFor="phone">PHONE NUMBER *</label>
+                  <label htmlFor="phone">PHONE NUMBER</label>
                   <input
                     id="phone"
                     type="tel"
@@ -291,7 +291,7 @@ export default function Registration({ presetDomain }: Props) {
                   {msg('phone')}
                 </div>
                 <div className="field">
-                  <label htmlFor="email">EMAIL *</label>
+                  <label htmlFor="email">EMAIL</label>
                   <input
                     id="email"
                     type="email"
@@ -308,7 +308,7 @@ export default function Registration({ presetDomain }: Props) {
 
               {/* College: Full-width input */}
               <div className="field">
-                <label htmlFor="college">COLLEGE *</label>
+                <label htmlFor="college">COLLEGE</label>
                 <input
                   id="college"
                   type="text"
@@ -323,7 +323,7 @@ export default function Registration({ presetDomain }: Props) {
 
               {/* Branch: Full-width dropdown */}
               <div className="field">
-                <label htmlFor="branch">BRANCH *</label>
+                <label htmlFor="branch">BRANCH</label>
                 <select
                   id="branch"
                   value={values.branch}
@@ -345,7 +345,7 @@ export default function Registration({ presetDomain }: Props) {
               {/* Year & Domain preference: side-by-side on desktop */}
               <div className="form__row form__row--2col">
                 <div className="field">
-                  <label htmlFor="year">YEAR OF STUDY *</label>
+                  <label htmlFor="year">YEAR OF STUDY</label>
                   <select
                     id="year"
                     value={values.year}
@@ -382,7 +382,7 @@ export default function Registration({ presetDomain }: Props) {
                 className="field field--group"
                 aria-describedby={err('teamStatus') ? 'teamStatus-error' : undefined}
               >
-                <legend>TEAM REGISTRATION *</legend>
+                <legend>TEAM REGISTRATION</legend>
                 <div className="choice-group">
                   <label className="choice">
                     <input
@@ -415,7 +415,7 @@ export default function Registration({ presetDomain }: Props) {
                 <div className="field--reveal">
                   <div className="form__row form__row--2col">
                     <div className="field">
-                      <label htmlFor="teamName">TEAM NAME *</label>
+                      <label htmlFor="teamName">TEAM NAME</label>
                       <input
                         id="teamName"
                         type="text"
@@ -427,7 +427,7 @@ export default function Registration({ presetDomain }: Props) {
                       {msg('teamName')}
                     </div>
                     <div className="field">
-                      <label htmlFor="teamSize">TEAM SIZE *</label>
+                      <label htmlFor="teamSize">TEAM SIZE</label>
                       <select
                         id="teamSize"
                         value={values.teamSize}
@@ -446,7 +446,7 @@ export default function Registration({ presetDomain }: Props) {
                   {(values.teamSize === '3' || values.teamSize === '4') && (
                     <div className="form__row form__row--2col">
                       <div className="field">
-                        <label htmlFor="member2Name">TEAMMATE 2 NAME *</label>
+                        <label htmlFor="member2Name">TEAMMATE 2 NAME</label>
                         <input
                           id="member2Name"
                           type="text"
@@ -459,7 +459,7 @@ export default function Registration({ presetDomain }: Props) {
                       </div>
                       {values.teamSize === '4' ? (
                         <div className="field">
-                          <label htmlFor="member3Name">TEAMMATE 3 NAME *</label>
+                          <label htmlFor="member3Name">TEAMMATE 3 NAME</label>
                           <input
                             id="member3Name"
                             type="text"
@@ -485,7 +485,7 @@ export default function Registration({ presetDomain }: Props) {
                     onChange={(e) => set('confirm', e.target.checked)}
                     {...field('confirm')}
                   />
-                  <span>I confirm these details are correct. *</span>
+                  <span>I confirm these details are correct.</span>
                 </label>
                 {msg('confirm')}
               </div>

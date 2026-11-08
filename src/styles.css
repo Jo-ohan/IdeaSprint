@@ -1,6 +1,7 @@
 /* ===== Tokens ===== */
 :root {
   --blue: #005f9e;
+  --blue-dark: #004b7d;
   --ink: #000;
   --paper: #fff;
   --mist: #edf3f8;
@@ -33,6 +34,44 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: var(--blue) var(--ink);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--blue) var(--ink);
+}
+
+/* ===== Custom Scrollbar (WebKit / Chromium / Edge / Safari) ===== */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--ink);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--blue);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--blue-dark);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: #003e68;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--ink);
 }
 
 /*
@@ -223,7 +262,7 @@ a {
 }
 
 .site-header__brand img {
-  height: 2.5rem;
+  height: 2.85rem;
   width: auto;
   object-fit: contain;
   display: block;
@@ -231,7 +270,7 @@ a {
 }
 
 .site-header--scrolled .site-header__brand img {
-  height: 2.15rem;
+  height: 2.35rem;
 }
 
 .site-header__brand:hover img {
@@ -1160,9 +1199,12 @@ a {
 }
 
 .hero__title {
-  display: grid;
+  display: inline-grid;
+  width: fit-content;
+  max-width: 100%;
   grid-template-columns: auto 1fr;
   grid-template-areas: 'idea year' 'sprint sprint';
+  column-gap: clamp(0.75rem, 2.5vw, 2.5rem);
   align-items: end;
   font-family: var(--font-display);
   font-stretch: 125%;
@@ -1185,10 +1227,12 @@ a {
 .hero__year {
   grid-area: year;
   justify-self: end;
-  font-size: 0.42em;
-  line-height: 1;
-  padding-bottom: 0.08em;
-  letter-spacing: 0;
+  align-self: end;
+  font-size: 0.38em;
+  line-height: 0.95;
+  padding-bottom: 0.07em;
+  letter-spacing: -0.015em;
+  color: var(--ink);
 }
 
 .hero__grid {
