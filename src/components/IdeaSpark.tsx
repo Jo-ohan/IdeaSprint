@@ -148,7 +148,7 @@ export default function IdeaSpark({ onUse }: Props) {
                 <span className="gen-dots"><span /><span /><span /></span>
               </p>
             ) : (
-              <p className="prompt__empty">Your problem statement appears here. Choose a domain and press generate.</p>
+              <p className="prompt__text">Your problem statement appears here. Choose a domain and press generate.</p>
             )}
           </div>
           {spark && !generating && (

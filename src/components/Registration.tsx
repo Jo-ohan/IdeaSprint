@@ -19,12 +19,11 @@ interface Values {
   teamStatus: string
   teamName: string
   teamSize: string
-  member2Name: string
-  member3Name: string
+  teammates: string[]
   confirm: boolean
 }
 
-type Errors = Partial<Record<keyof Values, string>>
+type Errors = Record<string, string>
 
 const empty: Values = {
   name: '',
@@ -38,8 +37,7 @@ const empty: Values = {
   teamStatus: '',
   teamName: '',
   teamSize: '',
-  member2Name: '',
-  member3Name: '',
+  teammates: [],
   confirm: false,
 }
 
@@ -64,12 +62,18 @@ function validate(v: Values): Errors {
 
   if (v.teamStatus === 'team') {
     if (!v.teamName.trim()) e.teamName = 'Enter your team name.'
-    if (!v.teamSize) e.teamSize = 'Select your team size.'
-    if ((v.teamSize === '3' || v.teamSize === '4') && !v.member2Name.trim()) {
-      e.member2Name = 'Enter teammate 2 name.'
-    }
-    if (v.teamSize === '4' && !v.member3Name.trim()) {
-      e.member3Name = 'Enter teammate 3 name.'
+    if (!v.teamSize) {
+      e.teamSize = 'Select your team size.'
+    } else {
+      const size = parseInt(v.teamSize, 10)
+      const count = !isNaN(size) && size > 1 ? size - 1 : 0
+      for (let i = 0; i < count; i++) {
+        const num = i + 2
+        const mate = v.teammates[i]
+        if (!mate || !mate.trim()) {
+          e[`teammate-${num}`] = `Enter teammate ${num} name.`
+        }
+      }
     }
   }
 
@@ -77,7 +81,7 @@ function validate(v: Values): Errors {
   return e
 }
 
-const ORDER: (keyof Values)[] = [
+const BASE_ORDER: string[] = [
   'name',
   'gender',
   'phone',
@@ -88,9 +92,6 @@ const ORDER: (keyof Values)[] = [
   'teamStatus',
   'teamName',
   'teamSize',
-  'member2Name',
-  'member3Name',
-  'confirm',
 ]
 
 export default function Registration({ presetDomain }: Props) {
@@ -114,7 +115,39 @@ export default function Registration({ presetDomain }: Props) {
   }, [done])
 
   const set = <K extends keyof Values>(key: K, value: Values[K]) => {
-    const next = { ...values, [key]: value }
+    let next: Values
+    if (key === 'teamSize') {
+      const sizeStr = value as string
+      const size = parseInt(sizeStr, 10)
+      const needed = !isNaN(size) && size > 1 ? size - 1 : 0
+      const nextTeammates = values.teammates.slice(0, needed)
+      while (nextTeammates.length < needed) {
+        nextTeammates.push('')
+      }
+      next = { ...values, teamSize: sizeStr, teammates: nextTeammates }
+    } else if (key === 'teamStatus') {
+      if (value === 'solo') {
+        next = {
+          ...values,
+          teamStatus: 'solo',
+          teamName: '',
+          teamSize: '',
+          teammates: [],
+        }
+      } else {
+        next = { ...values, teamStatus: value as string }
+      }
+    } else {
+      next = { ...values, [key]: value }
+    }
+    setValues(next)
+    if (submitted) setErrors(validate(next))
+  }
+
+  const setTeammate = (index: number, val: string) => {
+    const nextTeammates = [...values.teammates]
+    nextTeammates[index] = val
+    const next = { ...values, teammates: nextTeammates }
     setValues(next)
     if (submitted) setErrors(validate(next))
   }
@@ -124,7 +157,9 @@ export default function Registration({ presetDomain }: Props) {
     const errs = validate(values)
     setErrors(errs)
     setSubmitted(true)
-    const first = ORDER.find((k) => errs[k])
+    const teammateKeys = values.teammates.map((_, i) => `teammate-${i + 2}`)
+    const order = [...BASE_ORDER, ...teammateKeys, 'confirm']
+    const first = order.find((k) => errs[k])
     if (first) {
       formRef.current?.querySelector<HTMLElement>(`[name="${first}"]`)?.focus()
       return
@@ -138,13 +173,13 @@ export default function Registration({ presetDomain }: Props) {
   }
 
   const errorCount = Object.keys(errors).length
-  const err = (k: keyof Values) => errors[k]
-  const field = (k: keyof Values) => ({
+  const err = (k: string) => errors[k]
+  const field = (k: string) => ({
     name: k,
     'aria-invalid': err(k) ? true : undefined,
     'aria-describedby': err(k) ? `${k}-error` : undefined,
   })
-  const msg = (k: keyof Values) =>
+  const msg = (k: string) =>
     err(k) ? <p id={`${k}-error`} className="field__error">{err(k)}</p> : null
 
   if (done) {
@@ -178,12 +213,13 @@ export default function Registration({ presetDomain }: Props) {
                     : 'Looking for teammates (solo)'}
                 </dd>
               </div>
-              {values.teamStatus === 'team' && values.member2Name && (
-                <div><dt>Teammate 2</dt><dd>{values.member2Name}</dd></div>
-              )}
-              {values.teamStatus === 'team' && values.member3Name && (
-                <div><dt>Teammate 3</dt><dd>{values.member3Name}</dd></div>
-              )}
+              {values.teamStatus === 'team' &&
+                values.teammates.map((mate, i) => (
+                  <div key={i}>
+                    <dt>{`Teammate ${i + 2}`}</dt>
+                    <dd>{mate}</dd>
+                  </div>
+                ))}
               <div><dt>Domain</dt><dd>{domainLabel}</dd></div>
             </dl>
             <div className="hero__actions">
@@ -438,39 +474,33 @@ export default function Registration({ presetDomain }: Props) {
                         <option value="2">2 members</option>
                         <option value="3">3 members</option>
                         <option value="4">4 members</option>
+                        <option value="5">5 members</option>
                       </select>
                       {msg('teamSize')}
                     </div>
                   </div>
 
-                  {(values.teamSize === '3' || values.teamSize === '4') && (
+                  {values.teammates.length > 0 && (
                     <div className="form__row form__row--2col">
-                      <div className="field">
-                        <label htmlFor="member2Name">TEAMMATE 2 NAME</label>
-                        <input
-                          id="member2Name"
-                          type="text"
-                          placeholder="Teammate 2 full name"
-                          value={values.member2Name}
-                          onChange={(e) => set('member2Name', e.target.value)}
-                          {...field('member2Name')}
-                        />
-                        {msg('member2Name')}
-                      </div>
-                      {values.teamSize === '4' ? (
-                        <div className="field">
-                          <label htmlFor="member3Name">TEAMMATE 3 NAME</label>
-                          <input
-                            id="member3Name"
-                            type="text"
-                            placeholder="Teammate 3 full name"
-                            value={values.member3Name}
-                            onChange={(e) => set('member3Name', e.target.value)}
-                            {...field('member3Name')}
-                          />
-                          {msg('member3Name')}
-                        </div>
-                      ) : null}
+                      {values.teammates.map((teammateName, i) => {
+                        const teammateNum = i + 2
+                        const fieldKey = `teammate-${teammateNum}`
+                        return (
+                          <div className="field" key={fieldKey}>
+                            <label htmlFor={fieldKey}>{`TEAMMATE ${teammateNum} NAME`}</label>
+                            <input
+                              id={fieldKey}
+                              type="text"
+                              autoComplete="name"
+                              placeholder={`Teammate ${teammateNum} full name`}
+                              value={teammateName}
+                              onChange={(e) => setTeammate(i, e.target.value)}
+                              {...field(fieldKey)}
+                            />
+                            {msg(fieldKey)}
+                          </div>
+                        )
+                      })}
                     </div>
                   )}
                 </div>
