@@ -37,7 +37,7 @@ export const siteConfig = {
    */
   startsAt: '2026-11-21T09:00:00+05:30' as string | null,
 
-  venue: 'SPDK Room, Fifth Floor, College of Engineering Chengannur' as string | null,
+  venue: 'Maker's Space, College of Engineering Chengannur' as string | null,
 
   /** Official registration link. If set, the form shows a real link to it. */
   registrationUrl: null as string | null,
